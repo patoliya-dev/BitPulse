@@ -28,171 +28,172 @@ const Attendence = () => {
   const [sortDirection, setSortDirection] = useState("desc");
   const itemsPerPage = 5;
 
-  const attendanceData = useMemo(
-    () => [
-      {
-        id: 1,
-        date: "2025-09-20",
-        name: "John Doe",
-        status: "Present",
-        checkIn: "09:00 AM",
-        checkOut: "05:00 PM",
-      },
-      {
-        id: 2,
-        date: "2025-09-20",
-        name: "Jane Smith",
-        status: "Absent",
-        checkIn: "-",
-        checkOut: "-",
-      },
-      {
-        id: 3,
-        date: "2025-09-19",
-        name: "John Doe",
-        status: "Present",
-        checkIn: "09:05 AM",
-        checkOut: "05:00 PM",
-      },
-      {
-        id: 4,
-        date: "2025-09-20",
-        name: "Alice Johnson",
-        status: "Late",
-        checkIn: "09:30 AM",
-        checkOut: "05:00 PM",
-      },
-      {
-        id: 5,
-        date: "2025-09-19",
-        name: "Bob Wilson",
-        status: "Present",
-        checkIn: "08:55 AM",
-        checkOut: "05:05 PM",
-      },
-      {
-        id: 6,
-        date: "2025-09-18",
-        name: "Carol Davis",
-        status: "Absent",
-        checkIn: "-",
-        checkOut: "-",
-      },
-      {
-        id: 7,
-        date: "2025-09-20",
-        name: "David Brown",
-        status: "Present",
-        checkIn: "09:10 AM",
-        checkOut: "05:15 PM",
-      },
-      {
-        id: 8,
-        date: "2025-09-19",
-        name: "Emma Wilson",
-        status: "Late",
-        checkIn: "09:25 AM",
-        checkOut: "05:00 PM",
-      },
-      {
-        id: 9,
-        date: "2025-09-18",
-        name: "Frank Miller",
-        status: "Present",
-        checkIn: "08:45 AM",
-        checkOut: "04:55 PM",
-      },
-      {
-        id: 10,
-        date: "2025-09-17",
-        name: "Grace Taylor",
-        status: "Absent",
-        checkIn: "-",
-        checkOut: "-",
-      },
-      {
-        id: 11,
-        date: "2025-09-20",
-        name: "Henry Clark",
-        status: "Present",
-        checkIn: "09:02 AM",
-        checkOut: "05:08 PM",
-      },
-      {
-        id: 12,
-        date: "2025-09-19",
-        name: "Ivy Rodriguez",
-        status: "Present",
-        checkIn: "08:58 AM",
-        checkOut: "05:02 PM",
-      },
-      {
-        id: 13,
-        date: "2025-09-18",
-        name: "Jack Anderson",
-        status: "Late",
-        checkIn: "09:40 AM",
-        checkOut: "05:00 PM",
-      },
-      {
-        id: 14,
-        date: "2025-09-17",
-        name: "Kate Phillips",
-        status: "Present",
-        checkIn: "09:15 AM",
-        checkOut: "05:20 PM",
-      },
-      {
-        id: 15,
-        date: "2025-09-16",
-        name: "Liam Garcia",
-        status: "Absent",
-        checkIn: "-",
-        checkOut: "-",
-      },
-      {
-        id: 16,
-        date: "2025-09-20",
-        name: "Maya Singh",
-        status: "Present",
-        checkIn: "08:50 AM",
-        checkOut: "04:58 PM",
-      },
-      {
-        id: 17,
-        date: "2025-09-19",
-        name: "Noah Thompson",
-        status: "Late",
-        checkIn: "09:35 AM",
-        checkOut: "05:05 PM",
-      },
-      {
-        id: 18,
-        date: "2025-09-18",
-        name: "Olivia Lee",
-        status: "Present",
-        checkIn: "09:08 AM",
-        checkOut: "05:12 PM",
-      },
-      {
-        id: 19,
-        date: "2025-09-17",
-        name: "Paul Martinez",
-        status: "Absent",
-        checkIn: "-",
-        checkOut: "-",
-      },
-      {
-        id: 20,
-        date: "2025-09-16",
-        name: "Quinn Cooper",
-        status: "Present",
-        checkIn: "09:03 AM",
-        checkOut: "05:07 PM",
-      },
-    ],
-    []
-  );
+  // const attendanceData = useMemo(
+  //   () => [
+  //     {
+  //       id: 1,
+  //       date: "2025-09-20",
+  //       name: "John Doe",
+  //       status: "Present",
+  //       checkIn: "09:00 AM",
+  //       checkOut: "05:00 PM",
+  //     },
+  //     {
+  //       id: 2,
+  //       date: "2025-09-20",
+  //       name: "Jane Smith",
+  //       status: "Absent",
+  //       checkIn: "-",
+  //       checkOut: "-",
+  //     },
+  //     {
+  //       id: 3,
+  //       date: "2025-09-19",
+  //       name: "John Doe",
+  //       status: "Present",
+  //       checkIn: "09:05 AM",
+  //       checkOut: "05:00 PM",
+  //     },
+  //     {
+  //       id: 4,
+  //       date: "2025-09-20",
+  //       name: "Alice Johnson",
+  //       status: "Late",
+  //       checkIn: "09:30 AM",
+  //       checkOut: "05:00 PM",
+  //     },
+  //     {
+  //       id: 5,
+  //       date: "2025-09-19",
+  //       name: "Bob Wilson",
+  //       status: "Present",
+  //       checkIn: "08:55 AM",
+  //       checkOut: "05:05 PM",
+  //     },
+  //     {
+  //       id: 6,
+  //       date: "2025-09-18",
+  //       name: "Carol Davis",
+  //       status: "Absent",
+  //       checkIn: "-",
+  //       checkOut: "-",
+  //     },
+  //     {
+  //       id: 7,
+  //       date: "2025-09-20",
+  //       name: "David Brown",
+  //       status: "Present",
+  //       checkIn: "09:10 AM",
+  //       checkOut: "05:15 PM",
+  //     },
+  //     {
+  //       id: 8,
+  //       date: "2025-09-19",
+  //       name: "Emma Wilson",
+  //       status: "Late",
+  //       checkIn: "09:25 AM",
+  //       checkOut: "05:00 PM",
+  //     },
+  //     {
+  //       id: 9,
+  //       date: "2025-09-18",
+  //       name: "Frank Miller",
+  //       status: "Present",
+  //       checkIn: "08:45 AM",
+  //       checkOut: "04:55 PM",
+  //     },
+  //     {
+  //       id: 10,
+  //       date: "2025-09-17",
+  //       name: "Grace Taylor",
+  //       status: "Absent",
+  //       checkIn: "-",
+  //       checkOut: "-",
+  //     },
+  //     {
+  //       id: 11,
+  //       date: "2025-09-20",
+  //       name: "Henry Clark",
+  //       status: "Present",
+  //       checkIn: "09:02 AM",
+  //       checkOut: "05:08 PM",
+  //     },
+  //     {
+  //       id: 12,
+  //       date: "2025-09-19",
+  //       name: "Ivy Rodriguez",
+  //       status: "Present",
+  //       checkIn: "08:58 AM",
+  //       checkOut: "05:02 PM",
+  //     },
+  //     {
+  //       id: 13,
+  //       date: "2025-09-18",
+  //       name: "Jack Anderson",
+  //       status: "Late",
+  //       checkIn: "09:40 AM",
+  //       checkOut: "05:00 PM",
+  //     },
+  //     {
+  //       id: 14,
+  //       date: "2025-09-17",
+  //       name: "Kate Phillips",
+  //       status: "Present",
+  //       checkIn: "09:15 AM",
+  //       checkOut: "05:20 PM",
+  //     },
+  //     {
+  //       id: 15,
+  //       date: "2025-09-16",
+  //       name: "Liam Garcia",
+  //       status: "Absent",
+  //       checkIn: "-",
+  //       checkOut: "-",
+  //     },
+  //     {
+  //       id: 16,
+  //       date: "2025-09-20",
+  //       name: "Maya Singh",
+  //       status: "Present",
+  //       checkIn: "08:50 AM",
+  //       checkOut: "04:58 PM",
+  //     },
+  //     {
+  //       id: 17,
+  //       date: "2025-09-19",
+  //       name: "Noah Thompson",
+  //       status: "Late",
+  //       checkIn: "09:35 AM",
+  //       checkOut: "05:05 PM",
+  //     },
+  //     {
+  //       id: 18,
+  //       date: "2025-09-18",
+  //       name: "Olivia Lee",
+  //       status: "Present",
+  //       checkIn: "09:08 AM",
+  //       checkOut: "05:12 PM",
+  //     },
+  //     {
+  //       id: 19,
+  //       date: "2025-09-17",
+  //       name: "Paul Martinez",
+  //       status: "Absent",
+  //       checkIn: "-",
+  //       checkOut: "-",
+  //     },
+  //     {
+  //       id: 20,
+  //       date: "2025-09-16",
+  //       name: "Quinn Cooper",
+  //       status: "Present",
+  //       checkIn: "09:03 AM",
+  //       checkOut: "05:07 PM",
+  //     },
+  //   ],
+  //   []
+  // );
+  const [attendanceData, setAttendenceData ] = useState([]);
   const [user, setUser] = useState(null);
 
   useEffect(() => {
@@ -200,8 +201,10 @@ const Attendence = () => {
       const attendence = await api.get("/attendence/report");
       console.log("object", attendence)
       setUser(attendence?.data?.data?.[0] || null);
+      setAttendenceData(attendence?.data?.data);
     })();
   }, []);
+  console.log("ssssssssssss", attendanceData)
 
   const filteredData = useMemo(() => {
     let filtered = attendanceData;
@@ -326,7 +329,7 @@ const Attendence = () => {
   const totalPages = Math.ceil(filteredData.length / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
-  const currentData = filteredData.slice(startIndex, endIndex);
+  const currentData = attendanceData.slice(startIndex, endIndex);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-cyan-50">
