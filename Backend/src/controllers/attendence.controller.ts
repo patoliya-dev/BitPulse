@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import moment from "moment";
-import { UserModel } from "../models/user.model";
+import { UserDoc, UserModel } from "../models/user.model";
 import { Attendance } from "../models/attendence.model";
 import { AttendanceStatus, OFFICE_START_HOUR } from "../constant/app.constant";
 import { TODAY } from "../utils/utils";
@@ -98,15 +98,12 @@ export const getUserAttendance = async (req: Request | any, res: Response) => {
       return res.status(401).json({ success: false, message: "Unauthorized" });
     }
 
-    // Optional: filter by status
     const { status, fromDate, toDate } = req.query;
-
     const filter: any = { user: userId };
 
-    // Filter by status if provided
+    // 🔹 Status filter
     if (status && typeof status === "string") {
       const statusLower = status.toLowerCase();
-      // Type guard: check if string is a valid enum value
       if (
         !Object.values(AttendanceStatus).includes(
           statusLower as AttendanceStatus
@@ -116,12 +113,10 @@ export const getUserAttendance = async (req: Request | any, res: Response) => {
           .status(400)
           .json({ success: false, message: "Invalid status" });
       }
-
-      // Cast to enum type
       filter.status = statusLower as AttendanceStatus;
     }
 
-    // Filter by date range if provided
+    // 🔹 Date range filter
     if (fromDate || toDate) {
       filter.date = {};
       if (fromDate && typeof fromDate === "string") {
@@ -134,15 +129,49 @@ export const getUserAttendance = async (req: Request | any, res: Response) => {
       }
     }
 
-    // Fetch attendance sorted by date descending
+    // 🔹 Fetch attendance with full user populated
     const attendanceList = await Attendance.find(filter)
-      .populate("user") // populate all fields of user
-      .sort({ date: -1 });
+      .populate("user", "first_name last_name") // only useful fields
+      .sort({ date: -1 })
+      .lean();
+
+    // 🔹 Summarize sessions
+    const summarized = attendanceList.map((att) => {
+      let firstCheckIn: Date | null = null;
+      let lastCheckOut: Date | null = null;
+      const user = att.user as unknown as UserDoc;
+
+      if (att.sessions && att.sessions.length > 0) {
+        // sort sessions by checkIn
+        const sortedSessions = att.sessions.sort(
+          (a: any, b: any) =>
+            new Date(a.checkIn).getTime() - new Date(b.checkIn).getTime()
+        );
+
+        firstCheckIn = sortedSessions[0]?.checkIn || null;
+
+        // last checkOut
+        const withCheckOut = sortedSessions.filter((s: any) => s.checkOut);
+        if (withCheckOut.length > 0) {
+          lastCheckOut = withCheckOut[withCheckOut.length - 1].checkOut || null;
+        }
+      }
+
+      return {
+        id: att._id,
+        name: `${user?.first_name || ""} ${user?.last_name || ""}`.trim(),
+        date: att.date,
+        status: att.status,
+        checkIn: firstCheckIn,
+        checkOut: lastCheckOut,
+        sessions: att.sessions,
+      };
+    });
 
     return res.status(200).json({
       success: true,
-      count: attendanceList.length,
-      data: attendanceList,
+      count: summarized.length,
+      data: summarized,
     });
   } catch (err: any) {
     console.error("Error in getUserAttendance:", err);
