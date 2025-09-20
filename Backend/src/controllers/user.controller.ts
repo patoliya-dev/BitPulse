@@ -5,9 +5,18 @@ import { UserModel } from "../models/user.model";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import config from "../config/config";
+import { userSchema } from "../schemas/user.schema";
 
 export async function registerUser(req: Request, res: Response) {
   try {
+    const { error, value } = userSchema.validate(req.body);
+
+    if (error) {
+      return res.status(400).json({
+        message: "Validation failed",
+        errors: error.details.map((detail) => detail.message),
+      });
+    }
     // Parse JSON body first; in upload mode, fields come with multer
     if (await emailExists(req?.body?.email)) {
       return res.status(409).json({ error: "Email is already in use." });
