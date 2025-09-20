@@ -1,11 +1,13 @@
-import { z } from 'zod';
+import Joi from "joi";
 
-export const registerUserSchema = z.object({
-  first_name: z.string().trim().min(1, { message: 'first_name is required' }),
-  last_name: z.string().trim().min(1, { message: 'last_name is required' }),
-  email: z.string().email({ message: 'email is invalid' }),
-  password: z.string().min(8, { message: 'password must be at least 8 characters' }),
-  registration_mode: z.enum(['upload', 'live'], { message: 'registration_mode must be upload or live' }),
-  profile_pic_base64: z.string().optional(),
-  attendance_pic_base64: z.string().optional(),
+export const userSchema = Joi.object({
+  first_name: Joi.string().trim().required(),
+  last_name: Joi.string().trim().required(),
+  email: Joi.string().trim().email().required(),
+  password: Joi.string().trim().required(),
+  registration_mode: Joi.string().valid("upload", "live").required().messages({
+    "any.only": "Registration mode must be one of: upload,live",
+    "string.empty": "Registration mode is required",
+  }),
+  attendance_pic_url: Joi.string().trim().optional(),
 });
