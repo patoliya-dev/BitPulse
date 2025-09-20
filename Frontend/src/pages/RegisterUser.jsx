@@ -24,6 +24,7 @@ const RegisterUser = () => {
   const [modelsLoaded, setModelsLoaded] = useState(false);
   const [busy, setBusy] = useState(false);
   const [showBoom, setShowBoom] = useState(false);
+  const [showThankYou, setShowThankYou] = useState(false);
 
 
 useEffect(() => {
@@ -211,10 +212,10 @@ useEffect(() => {
       });
 
       setShowBoom(true);
+      setShowThankYou(true);
       toast.success("Registration successful!");
       setTimeout(() => {
         setShowBoom(false);
-        navigate("/");
       }, 1000);
 
     } catch (err) {
@@ -226,7 +227,18 @@ useEffect(() => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-500 p-6">
+    <>
+    {showThankYou ? <div className="min-h-screen flex flex-col items-center justify-center bg-gray-100">
+      <h1 className="text-4xl font-bold mb-4 text-green-400">Thank You! 🎉</h1>
+      <p className="text-xl font-semibold mb-6">Your attendance has been recorded.</p>
+
+      <a
+        onClick={() => navigate("/login")}
+        className="px-6 py-3 bg-indigo-600 text-white font-semibold rounded-lg shadow-md hover:bg-indigo-700 transition cursor-pointer"
+      >
+        Go to Login
+      </a>
+    </div>:<div className="min-h-screen flex items-center justify-center bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-500 p-6">
       {showBoom && <Confetti />}
       <div className="bg-white shadow-2xl rounded-2xl p-8 w-full max-w-xl">
         <h1 className="text-3xl font-bold text-center mb-6 text-indigo-700">
@@ -329,7 +341,9 @@ useEffect(() => {
           {busy ? "Registering..." : "Register"}
         </button>
       </div>
-    </div>
+    </div>}
+      
+    </>
   );
 };
 
