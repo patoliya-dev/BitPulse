@@ -1,6 +1,7 @@
 import React, { useRef, useEffect, useState } from "react";
 import Webcam from "react-webcam";
 import * as faceapi from "face-api.js";
+import { CheckCircle, AlertTriangle, XCircle } from "lucide-react";
 
 const AttendanceScannerUI = () => {
   const webcamRef = useRef(null);
@@ -22,7 +23,7 @@ const AttendanceScannerUI = () => {
       await faceapi.nets.faceLandmark68Net.loadFromUri(MODEL_URL);
       await faceapi.nets.faceRecognitionNet.loadFromUri(MODEL_URL);
       setModelsLoaded(true);
-      setMessage("Models loaded. Loading users...");
+      setMessage("✅ Models loaded. Loading users...");
     };
     loadModels();
   }, []);
@@ -115,14 +116,13 @@ const AttendanceScannerUI = () => {
 
       // Ensure face is large enough
       const box = detections[0].detection.box;
-      if (box.width < 100 || box.height < 100) {
+      if (box.width < 120 || box.height < 120) {
         setMessage("⚠️ Move closer to the camera.");
         return;
       }
 
       setScannerAnimation(true);
 
-      // Make sure descriptors are loaded
       if (!registeredDescriptorsRef.current.length) {
         setMessage("⚠️ Waiting for registered users to load...");
         return;
@@ -149,12 +149,12 @@ const AttendanceScannerUI = () => {
         setShowThankYou(true);
         sendAttendanceToBackend(userId, status);
 
-        // Auto return to scanner
+        // Auto return
         setTimeout(() => {
           setShowThankYou(false);
           setMessage("Place your face inside the scanner.");
           setScannerAnimation(false);
-        }, 10000);
+        }, 6000);
       } else {
         setMessage("❌ Face not recognized or unclear. Try again!");
         setScannerAnimation(false);
@@ -165,48 +165,53 @@ const AttendanceScannerUI = () => {
   }, [modelsLoaded, descriptorsLoaded, userList]);
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-gray-900 p-4 text-white">
+    <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-gray-900 via-indigo-900 to-purple-900 p-6 text-white">
       {!modelsLoaded || !descriptorsLoaded ? (
         <div className="flex flex-col items-center">
-          <div className="loader border-4 border-t-4 border-indigo-500 rounded-full w-12 h-12 animate-spin mb-4"></div>
+          <div className="loader border-4 border-t-4 border-indigo-500 rounded-full w-14 h-14 animate-spin mb-6"></div>
           <p className="text-lg font-semibold">{message}</p>
         </div>
       ) : !showThankYou ? (
-        <div className="relative">
-          <h1 className="text-2xl font-bold mb-4 text-center">
+        <div className="relative flex flex-col items-center">
+          <h1 className="text-3xl font-extrabold mb-6 text-center bg-clip-text text-transparent bg-gradient-to-r from-yellow-400 to-pink-400 drop-shadow-lg">
             Face Attendance Scanner
           </h1>
 
-          <div className="relative w-96 h-72">
+          <div className="relative w-[500px] h-[400px] rounded-2xl overflow-hidden shadow-2xl border-4 border-indigo-400">
             <Webcam
               ref={webcamRef}
               mirrored
               screenshotFormat="image/jpeg"
               videoConstraints={{ facingMode: "user" }}
-              className="rounded-lg border-4 border-indigo-400 shadow-lg w-full h-full object-cover"
+              className="w-full h-full object-cover"
             />
 
             {/* Scanner overlay */}
-            <div className="absolute top-0 left-0 w-full h-full pointer-events-none">
-              <div
-                className={`absolute top-0 left-0 w-full h-1 border-t-4 border-green-400 animate-slide`}
-                style={{ display: scannerAnimation ? "block" : "none" }}
-              />
-            </div>
+            <div className="absolute inset-0 pointer-events-none rounded-2xl border-4 border-green-400 animate-pulse"></div>
+            {scannerAnimation && (
+              <div className="absolute top-0 left-0 w-full h-1 bg-green-400 animate-slide"></div>
+            )}
           </div>
 
-          <p className="mt-4 text-lg font-semibold text-center">{message}</p>
+          <div className="mt-6 flex items-center gap-2 text-lg font-semibold">
+            {message.includes("✅") && <CheckCircle className="text-green-400" />}
+            {message.includes("⚠️") && <AlertTriangle className="text-yellow-400" />}
+            {message.includes("❌") && <XCircle className="text-red-400" />}
+            <span>{message}</span>
+          </div>
         </div>
       ) : (
-        <div className="flex flex-col items-center justify-center">
-          <h1 className="text-4xl font-bold mb-4 text-green-400">Thank You! 🎉</h1>
-          <p className="text-xl font-semibold">
+        <div className="flex flex-col items-center justify-center animate-fade-in">
+          <h1 className="text-5xl font-extrabold mb-4 text-green-400 drop-shadow-lg">
+            Thank You! 🎉
+          </h1>
+          <p className="text-2xl font-semibold text-gray-100">
             Your attendance has been recorded.
           </p>
         </div>
       )}
 
-      {/* Scanner animation */}
+      {/* Animations */}
       <style>
         {`
           @keyframes slide {
@@ -220,6 +225,13 @@ const AttendanceScannerUI = () => {
           .loader {
             border-color: rgba(255, 255, 255, 0.2);
             border-top-color: #6366f1;
+          }
+          .animate-fade-in {
+            animation: fadeIn 1s ease-in-out;
+          }
+          @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.9); }
+            to { opacity: 1; transform: scale(1); }
           }
         `}
       </style>
