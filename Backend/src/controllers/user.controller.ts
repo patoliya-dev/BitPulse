@@ -2,6 +2,10 @@ import { Request, Response } from "express";
 import { emailExists, createUser } from "../services/user.service";
 import { uploadDataUrl } from "../services/cloudinary.service";
 import { hashPassword } from "../utils/password";
+import { UserModel } from "../models/user.model";
+import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
+import config from "../config/config";
 
 export async function registerUser(req: Request, res: Response) {
   try {
@@ -60,3 +64,41 @@ export async function registerUser(req: Request, res: Response) {
     return res.status(500).json({ error: "ServerError" });
   }
 }
+
+// Login user
+export const login = async (req: Request, res: Response) => {
+  try {
+    const { email, password } = req.body;
+
+    const user = await UserModel.findOne({ email });
+    if (!user) {
+      return res.status(400).json({ error: "Invalid credentials" });
+    }
+
+    const isMatch = await bcrypt.compare(password, user.password_hash);
+    if (!isMatch) {
+      return res.status(400).json({ error: "Invalid credentials" });
+    }
+
+    if (!config.JWT_SECRET) {
+      throw new Error("JWT_SECRET is not defined in environment variables");
+    }
+
+    const token = jwt.sign(
+      { id: user._id, email: user.email },
+      config.JWT_SECRET,
+      {
+        expiresIn: "1h",
+      }
+    );
+
+    res.json({
+      token,
+      email: user.email,
+      firstName: user.first_name,
+      lastName: user.last_name,
+    });
+  } catch (err: any) {
+    res.status(500).json({ error: err.message });
+  }
+};
