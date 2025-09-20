@@ -46,7 +46,10 @@ const Login = () => {
         ...payload,
       });
 
-      console.log("loginData", loginData);
+      if (!loginData.data.token) {
+        throw new Error("Invalid response from server");
+      }
+      localStorage.setItem("token", loginData.data.token);
 
       toast.success("Login successful!");
       setShowBoom(true);

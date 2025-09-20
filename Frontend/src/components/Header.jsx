@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom"; // if using react-router
 import logo from "../assets/logo.png";
+import { toast } from "react-toastify";
 
 const Header = () => {
   const navigate = useNavigate();
@@ -41,8 +42,9 @@ const Header = () => {
   };
 
   const handleLogout = () => {
-    console.log("Logout clicked");
-    // Add your logout logic here
+    localStorage.clear();
+    toast.success("Logged out successfully");
+    navigate("/login");
   };
 
   return (
