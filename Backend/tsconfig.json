@@ -1,0 +1,16 @@
+{
+  "compilerOptions": {
+    "target": "ES2020",
+    "module": "commonjs",
+    "rootDir": "src",
+    "outDir": "dist",
+    "strict": true,
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "skipLibCheck": true,
+    "noEmit": false,        // Ensure emit happens
+    "allowJs": false        // Prevents .js in src
+  },
+  "include": ["src"],       // Only compile src folder
+  "exclude": ["node_modules", "dist"] // Ignore these
+}
