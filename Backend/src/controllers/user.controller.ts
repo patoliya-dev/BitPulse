@@ -1,6 +1,5 @@
 import { Request, Response } from "express";
 import { emailExists, createUser } from "../services/user.service";
-import { uploadDataUrl } from "../services/cloudinary.service";
 import { hashPassword } from "../utils/password";
 import { UserModel } from "../models/user.model";
 import bcrypt from "bcrypt";
