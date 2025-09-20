@@ -23,8 +23,8 @@ export async function registerUser(req: Request, res: Response) {
       last_name: req?.body?.last_name,
       email: req?.body?.email,
       password_hash,
-      profile_pic_url: req?.body?.attendance_pic,
-      attendance_pic_url: req?.body?.attendance_pic,
+      profile_pic_url: req?.body?.attendance_pic_url,
+      attendance_pic_url: req?.body?.attendance_pic_url,
       registration_mode: registrationMode,
     });
 
