@@ -28,7 +28,7 @@ const HomeScreen = () => {
 
       {/* Call to Action */}
       <button
-        onClick={() => navigate("/scanner")}
+        onClick={() => navigate("/attendanceFace")}
         className="mt-10 px-8 py-4 bg-yellow-400 text-indigo-900 font-bold rounded-full shadow-lg hover:scale-105 hover:shadow-2xl transition-all duration-300"
       >
         Start Attendance
