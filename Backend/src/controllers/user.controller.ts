@@ -12,27 +12,6 @@ export async function registerUser(req: Request, res: Response) {
 
     const registrationMode = req?.body?.registration_mode;
 
-    let profile_pic_url = "";
-    let attendance_pic_url = "";
-
-    // live mode: expect base64 data URLs in body
-    if (!req?.body?.attendance_pic_url) {
-      return res.status(400).json({
-        error: "ImagesRequired",
-        details: "Attendance Picture is required for live mode",
-      });
-    }
-
-    if (req?.body?.profile_pic_url) {
-      profile_pic_url = (
-        await uploadDataUrl(req?.body?.profile_pic_url, "users/profile")
-      ).secure_url;
-    }
-
-    attendance_pic_url = (
-      await uploadDataUrl(req?.body?.attendance_pic_url, "users/attendance")
-    ).secure_url;
-
     const password_hash = await hashPassword(req?.body?.password);
 
     const user = await createUser({
@@ -40,8 +19,8 @@ export async function registerUser(req: Request, res: Response) {
       last_name: req?.body?.last_name,
       email: req?.body?.email,
       password_hash,
-      profile_pic_url: profile_pic_url || attendance_pic_url,
-      attendance_pic_url,
+      profile_pic_url: req?.body?.attendance_pic,
+      attendance_pic_url: req?.body?.attendance_pic,
       registration_mode: registrationMode,
     });
 
@@ -50,9 +29,6 @@ export async function registerUser(req: Request, res: Response) {
       first_name: user.first_name,
       last_name: user.last_name,
       email: user.email,
-      profile_pic_url,
-      attendance_pic_url,
-      registration_mode: registrationMode,
       createdAt: user.createdAt,
     });
   } catch (err: any) {
