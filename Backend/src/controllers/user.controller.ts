@@ -78,3 +78,17 @@ export const login = async (req: Request, res: Response) => {
     res.status(500).json({ error: err.message });
   }
 };
+
+// Get all users (protected)
+export const getUsers = async (req: Request, res: Response) => {
+  try {
+    const users = await UserModel.find().select("-password"); // exclude password
+
+    res.json({
+      count: users.length,
+      users: users || [],
+    });
+  } catch (err: any) {
+    res.status(500).json({ error: err.message });
+  }
+};
