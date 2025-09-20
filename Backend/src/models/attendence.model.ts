@@ -1,4 +1,5 @@
 import { Schema, model, Document, Types } from "mongoose";
+import { AttendanceStatus } from "../constant/app.constant";
 
 // 🔹 TypeScript interface
 export interface ISession {
@@ -31,7 +32,7 @@ const AttendanceSchema = new Schema<IAttendance>(
     status: {
       type: String,
       enum: ["present", "absent", "late"],
-      default: "present",
+      default: AttendanceStatus.PRESENT,
     },
     sessions: [SessionSchema],
   },
