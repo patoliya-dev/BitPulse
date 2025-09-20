@@ -5,6 +5,7 @@ import { Attendance } from "../models/attendence.model";
 import { AttendanceStatus, OFFICE_START_HOUR } from "../constant/app.constant";
 import { TODAY } from "../utils/utils";
 
+// POST /attendance
 export const createAttendance = async (req: Request, res: Response) => {
   try {
     const { userId } = req.body;
@@ -83,6 +84,68 @@ export const createAttendance = async (req: Request, res: Response) => {
     }
   } catch (err: any) {
     console.error("Error in markAttendanceByFace:", err);
+    return res
+      .status(500)
+      .json({ success: false, message: "Server error", error: err.message });
+  }
+};
+
+// GET /attendance?status=present
+export const getUserAttendance = async (req: Request | any, res: Response) => {
+  try {
+    const userId = req.user?.id;
+    if (!userId) {
+      return res.status(401).json({ success: false, message: "Unauthorized" });
+    }
+
+    // Optional: filter by status
+    const { status, fromDate, toDate } = req.query;
+
+    const filter: any = { user: userId };
+
+    // Filter by status if provided
+    if (status && typeof status === "string") {
+      const statusLower = status.toLowerCase();
+      // Type guard: check if string is a valid enum value
+      if (
+        !Object.values(AttendanceStatus).includes(
+          statusLower as AttendanceStatus
+        )
+      ) {
+        return res
+          .status(400)
+          .json({ success: false, message: "Invalid status" });
+      }
+
+      // Cast to enum type
+      filter.status = statusLower as AttendanceStatus;
+    }
+
+    // Filter by date range if provided
+    if (fromDate || toDate) {
+      filter.date = {};
+      if (fromDate && typeof fromDate === "string") {
+        filter.date.$gte = moment(fromDate, "YYYY-MM-DD")
+          .startOf("day")
+          .toDate();
+      }
+      if (toDate && typeof toDate === "string") {
+        filter.date.$lte = moment(toDate, "YYYY-MM-DD").endOf("day").toDate();
+      }
+    }
+
+    // Fetch attendance sorted by date descending
+    const attendanceList = await Attendance.find(filter)
+      .populate("user") // populate all fields of user
+      .sort({ date: -1 });
+
+    return res.status(200).json({
+      success: true,
+      count: attendanceList.length,
+      data: attendanceList,
+    });
+  } catch (err: any) {
+    console.error("Error in getUserAttendance:", err);
     return res
       .status(500)
       .json({ success: false, message: "Server error", error: err.message });
