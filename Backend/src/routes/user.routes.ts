@@ -1,10 +1,8 @@
-import { Router } from 'express';
-import { registerUser } from '../controllers/user.controller';
-import { upload } from '../middleware/upload';
-
+import { Router } from "express";
+import { registerUser } from "../controllers/user.controller";
 const router = Router();
 
 // For upload mode, client should send multipart/form-data with files
-router.post('/register', upload, registerUser);
+router.post("/users/register", registerUser);
 
 export default router;

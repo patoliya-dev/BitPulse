@@ -7,6 +7,10 @@
     "strict": true,
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
-    "skipLibCheck": true
-  }
+    "skipLibCheck": true,
+    "noEmit": false,        // Ensure emit happens
+    "allowJs": false        // Prevents .js in src
+  },
+  "include": ["src"],       // Only compile src folder
+  "exclude": ["node_modules", "dist"] // Ignore these
 }
