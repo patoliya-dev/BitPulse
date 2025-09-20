@@ -20,9 +20,6 @@ app.use(cookieParser());
 app.use(express.json({ limit: "10mb" })); // JSON & base64 (live mode)
 app.use(express.urlencoded({ extended: true })); // form bodies
 
-// Healthcheck
-app.get("/health", (_req, res) => res.status(200).json({ ok: true }));
-
 // Routes
 app.use("/api/v1", router);
 

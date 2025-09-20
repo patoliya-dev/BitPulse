@@ -1,14 +1,11 @@
 import { z } from 'zod';
 
-export const registrationModeEnum = z.enum(['upload', 'live']);
-
 export const registerUserSchema = z.object({
-  first_name: z.string().trim().min(1).max(60),
-  last_name: z.string().trim().min(1).max(60),
-  email: z.string().email().transform((v) => v.toLowerCase()),
-  password: z.string().min(8),
-  registration_mode: registrationModeEnum,
-  // live mode can send base64 strings; upload mode uses multipart files
+  first_name: z.string().trim().min(1, { message: 'first_name is required' }),
+  last_name: z.string().trim().min(1, { message: 'last_name is required' }),
+  email: z.string().email({ message: 'email is invalid' }),
+  password: z.string().min(8, { message: 'password must be at least 8 characters' }),
+  registration_mode: z.enum(['upload', 'live'], { message: 'registration_mode must be upload or live' }),
   profile_pic_base64: z.string().optional(),
   attendance_pic_base64: z.string().optional(),
 });
