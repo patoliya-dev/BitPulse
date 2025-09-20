@@ -1,12 +1,19 @@
+import axios from "axios";
 import React, { useState } from "react";
+import { API_URL } from "../constants";
+import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
+import Confetti from "react-confetti-boom";
 
 const Login = () => {
+  const navigate = useNavigate();
   const [form, setForm] = useState({
     email: "",
     password: "",
   });
   const [errors, setErrors] = useState({});
   const [busy, setBusy] = useState(false);
+  const [showBoom, setShowBoom] = useState(false);  
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -19,24 +26,44 @@ const Login = () => {
     return newErrors;
   };
 
-  const handleLogin = () => {
-    const validation = validate();
-    if (Object.keys(validation).length > 0) {
-      setErrors(validation);
-      return;
-    }
-    setErrors({});
-    setBusy(true);
+  const handleLogin = async () => {
+    try {
+      const validation = validate();
+      if (Object.keys(validation).length > 0) {
+        setErrors(validation);
+        return;
+      }
+      setErrors({});
+      setBusy(true);
 
-    // Fake login request
-    setTimeout(() => {
-      alert(`Logged in as ${form.email}`);
+      const payload = {
+        email: form.email,
+        password: form.password,
+      }
+
+      // send to backend
+      const loginData = await axios.post(`${API_URL}/users/login`, {
+        ...payload,
+      });
+
+      console.log("loginData", loginData);
+
+      toast.success("Login successful!");
+      setShowBoom(true);
+      setTimeout(() => {
+        navigate("/");
+      }, 1000);
+    } catch (error) {
       setBusy(false);
-    }, 1500);
+      toast.error(
+        error.response?.data?.message || "Login failed. Please try again."
+      );
+    }
   };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-500 p-6">
+      {showBoom && <Confetti />}
       <div className="bg-white shadow-2xl rounded-2xl p-8 w-full max-w-md">
         <h1 className="text-3xl font-bold text-center mb-6 text-indigo-700">
           Login

@@ -228,6 +228,7 @@ useEffect(() => {
 
   return (
     <>
+    {showBoom && <Confetti />}
     {showThankYou ? <div className="min-h-screen flex flex-col items-center justify-center bg-gray-100">
       <h1 className="text-4xl font-bold mb-4 text-green-400">Thank You! 🎉</h1>
       <p className="text-xl font-semibold mb-6">Your attendance has been recorded.</p>
@@ -239,7 +240,6 @@ useEffect(() => {
         Go to Login
       </a>
     </div>:<div className="min-h-screen flex items-center justify-center bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-500 p-6">
-      {showBoom && <Confetti />}
       <div className="bg-white shadow-2xl rounded-2xl p-8 w-full max-w-xl">
         <h1 className="text-3xl font-bold text-center mb-6 text-indigo-700">
           User Registration
