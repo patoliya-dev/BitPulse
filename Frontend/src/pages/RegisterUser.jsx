@@ -202,7 +202,6 @@ useEffect(() => {
         email: form.email,
         password: form.password,
         registration_mode: "live",
-        profile_pic_url: photo,
         attendance_pic_url: photo,
       }
 

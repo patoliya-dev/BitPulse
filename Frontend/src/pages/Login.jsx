@@ -56,7 +56,7 @@ const Login = () => {
     } catch (error) {
       setBusy(false);
       toast.error(
-        error.response?.data?.message || "Login failed. Please try again."
+        error.response?.data?.message || "Invalid Credentials"
       );
     }
   };
