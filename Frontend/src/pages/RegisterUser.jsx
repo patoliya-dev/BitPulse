@@ -3,8 +3,13 @@ import React, { useState, useRef, useEffect } from "react";
 import Webcam from "react-webcam";
 import * as faceapi from "face-api.js";
 import axios from "axios";
+import { API_URL } from "../constants";
+import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
+import Confetti from "react-confetti-boom";
 
 const RegisterUser = () => {
+  const navigate = useNavigate();
   const [form, setForm] = useState({
     firstName: "",
     lastName: "",
@@ -18,6 +23,7 @@ const RegisterUser = () => {
   const [errors, setErrors] = useState({});
   const [modelsLoaded, setModelsLoaded] = useState(false);
   const [busy, setBusy] = useState(false);
+  const [showBoom, setShowBoom] = useState(false);
 
   // ---------- Model loading ----------
 //   useEffect(() => {
@@ -214,17 +220,28 @@ useEffect(() => {
       // Convert Float32Array to plain Array for JSON transport
       const embeddingArray = Array.from(descriptor);
 
+      const payload = {
+        first_name: form.firstName,
+        last_name: form.lastName,
+        email: form.email,
+        password: form.password,
+        registration_mode: "live",
+        profile_pic_url: photo,
+        attendance_pic_url: photo,
+      }
+
       // send to backend
-      await axios.post("http://localhost:5000/register", {
-        ...form,
-        photo, // dataURL (you can store on server or cloud)
-        embedding: embeddingArray,
+      await axios.post(`${API_URL}/users/register`, {
+        ...payload,
       });
 
-      alert("User registered successfully 🎉");
-    //   setForm({ firstName: "", lastName: "", email: "", phone: "", password: "" });
-    //   setPhoto(null);
-    //   setShowWebcam(true);
+      setShowBoom(true);
+      toast.success("Registration successful!");
+      setTimeout(() => {
+        setShowBoom(false);
+        navigate("/");
+      }, 1000);
+
     } catch (err) {
       console.error("register error:", err);
       alert("Registration failed. Check console for details.");
@@ -235,6 +252,7 @@ useEffect(() => {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-500 p-6">
+      {showBoom && <Confetti />}
       <div className="bg-white shadow-2xl rounded-2xl p-8 w-full max-w-xl">
         <h1 className="text-3xl font-bold text-center mb-6 text-indigo-700">
           User Registration
