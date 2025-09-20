@@ -25,31 +25,6 @@ const RegisterUser = () => {
   const [busy, setBusy] = useState(false);
   const [showBoom, setShowBoom] = useState(false);
 
-  // ---------- Model loading ----------
-//   useEffect(() => {
-//     let active = true;
-//     const loadModels = async () => {
-//       const MODEL_URL = "/models";
-
-//       try {
-//         // const MODEL_URL = "/models";
-//         await Promise.all([
-//         faceapi.nets.ssdMobilenetv1.loadFromUri(MODEL_URL),
-//         faceapi.nets.faceLandmark68Net.loadFromUri(MODEL_URL),
-//         faceapi.nets.faceRecognitionNet.loadFromUri(MODEL_URL),
-//         ]);
-//         if (active) {
-//           console.log("✅ face-api models loaded");
-//           setModelsLoaded(true);
-//         }
-//       } catch (err) {
-//         console.error("Failed to load face-api models", err);
-//         alert("Failed to load face models. Check console and public/models folder.");
-//       }
-//     };
-//     loadModels();
-//     return () => { active = false; };
-//   }, []);
 
 useEffect(() => {
   const MODEL_URL = "/models"; // direct path to public/models
